@@ -37,6 +37,12 @@ def getActividades():
     actividades = list(map(lambda x: x.serialize(), actividades))
     return jsonify(actividades),200
 
+@app.route('/proyectos')
+def getProyectos():
+    proyectos = Proyectos.query.all()
+    proyectos = list(map(lambda x: x.serialize(), proyectos))
+    return jsonify(proyectos),200
+
 
 app.run(host='localhost', port=5000)
 
