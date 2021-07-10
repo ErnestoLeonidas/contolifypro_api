@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 
-from models import Usuarios, Empresas, Actividades, db
+from models import Usuarios, Empresas, Actividades, Proyectos, db
 
 app = Flask(__name__)
 
@@ -42,6 +42,20 @@ def getProyectos():
     proyectos = Proyectos.query.all()
     proyectos = list(map(lambda x: x.serialize(), proyectos))
     return jsonify(proyectos),200
+
+    # return  {
+    #     "descripcion": "Desarrollo de ingenier\u00eda de  nuevos chutes", 
+    #     "estado": 1, 
+    #     "fecha_entrega": "Fri, 01 Oct 2021 00:00:00 GMT", 
+    #     "fecha_inicio": "Sat, 01 May 2021 00:00:00 GMT", 
+    #     "id": 1, 
+    #     "jefe_proyecto_id": 1, 
+    #     "localidad_id": 1, 
+    #     "nombre": "Nuevos Chutes", 
+    #     "porcentaje_avance": 20, 
+    #     "presupuesto": 1000, 
+    #     "sigla": "QUI"
+    # }
 
 
 app.run(host='localhost', port=5000)
