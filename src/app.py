@@ -16,6 +16,7 @@ db.init_app(app)
 # CORS(app)
 Migrate(app, db)
 
+# usuarios
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
     user = Usuarios.query.all()
@@ -31,8 +32,7 @@ def getUsuario(id):
 @app.route('/usuarios/<id>', methods=['DELETE'])
 def deleteUsuario(id):
     user = Usuarios.query.get(id)
-    estado = 0
-    user.estado = estado
+    user.estado = 0
     Usuarios.update(user)
     return jsonify(user.serialize()),200
     
@@ -101,12 +101,27 @@ def addUsuario():
 
     return jsonify(user.serialize()),200
 
+# empresas
 @app.route('/empresas', methods=['GET'])
 def getEmpresas():
     empresas = Empresas.query.all()
     empresas = list(map(lambda x: x.serialize(), empresas))
     return jsonify(empresas),200
 
+@app.route('/empresas/<id>', methods=['GET'])
+def getEmpresa(id):
+    empresa = Empresas.query.get(id)
+    return jsonify(empresa.serialize()),200
+
+@app.route('/empresas/<id>', methods=['DELETE'])
+def deleteEmpresa(id):
+    empresa = Empresas.query.get(id)
+    empresa.estado = 0
+    Empresas.update(empresa)
+
+    return jsonify(empresa.serialize()),200
+
+# actividades
 @app.route('/actividades', methods=['GET'])
 def getActividades():
     actividades = Actividades.query.all()
@@ -121,7 +136,7 @@ def getActividad(id):
 @app.route('/actividades/<id>', methods=['DELETE'])
 def deleteActividad(id):
     actividad = Actividades.query.get(id)
-    estado = 0
+    actividad.estado = 0
     Actividades.update(actividad)
 
     return jsonify(actividad.serialize()),200
@@ -175,6 +190,7 @@ def addActividad():
 
     return jsonify(actividad.serialize()),200
 
+# Proyectos
 @app.route('/proyectos', methods=['GET'])
 def getProyectos():
     proyectos = Proyectos.query.all()
