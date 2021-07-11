@@ -13,21 +13,62 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://wankucl_controlifypro:w
 app.config['JWT_SECRET_KEY'] = "secret-key"
 
 db.init_app(app)
-CORS(app)
+# CORS(app)
 Migrate(app, db)
 
 @app.route('/usuarios', methods=['GET'])
-def test():
+def getUsuarios():
     user = Usuarios.query.all()
     # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
     user = list(map(lambda x: x.serialize(), user))
 
     return jsonify(user),200
+
+@app.route('/usuarios/<id>', methods=['GET'])
+def getUsuario(id):
+    user = Usuarios.query.get(id)
+
+    return jsonify(user.serialize()),200
     
-    # return jsonify(user.map()),200
-    # return jsonify([i.serialize() for i in user]),200
-    # user = Usuarios.query.get(1)
-    # return jsonify(user.serialize()), 200
+@app.route('/usuarios/<id>', methods=['PUT'])
+def updateUsuario(id):
+    user = Usuarios.query.get(id)
+
+    rut = request.json.get('rut')
+    primer_nombre = request.json.get('primer_nombre')
+    segundo_nombre = request.json.get('segundo_nombre')
+    apellido_paterno = request.json.get('apellido_paterno')
+    apellido_materno = request.json.get('apellido_materno')
+    password = request.json.get('password')
+    email = request.json.get('email')
+    estado = request.json.get('estado')
+    avatar = request.json.get('avatar')
+    comuna_id = request.json.get('comuna_id')
+    rol_id = request.json.get('rol_id')
+
+    user.rut = rut
+    user.primer_nombre = primer_nombre
+    user.segundo_nombre = segundo_nombre
+    user.apellido_paterno = apellido_paterno
+    user.apellido_materno = apellido_materno
+    user.password = password
+    user.email = email
+    user.estado = estado
+    user.avatar = avatar
+    user.comuna_id = comuna_id
+    user.rol_id = rol_id
+
+    Usuarios.update(user)
+
+    return jsonify(user.serialize()),200
+
+@app.route('/usuarios/<id>', methods=['DELETE'])
+def deleteUsuario(id):
+    user = Usuarios.query.get(id)
+    estado = 0
+    user.estado = estado
+    Usuarios.update(user)
+    return jsonify(user.serialize()),200
 
 @app.route('/empresas', methods=['GET'])
 def getEmpresas():
