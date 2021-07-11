@@ -2,8 +2,9 @@
 #   pass: wp5Sp.4MhY{w
 #   ip: 201.148.104.65
 #   userdb: wankucl_controlifypro
-from logging import setLogRecordFactory
+# from logging import setLogRecordFactory
 from flask_sqlalchemy import SQLAlchemy
+import datetime
 # from datetime import datetime // se usa para setear el datetime https://flask-sqlalchemy.palletsprojects.com/en/2.x/quickstart/    ver simple realtionship
 db = SQLAlchemy()
 
@@ -206,8 +207,8 @@ class Proyectos(db.Model):
             "descripcion": self.descripcion,
             "porcentaje_avance": self.porcentaje_avance,
             "presupuesto": self.presupuesto,
-            "fecha_inicio": self.fecha_inicio,
-            "fecha_entrega": self.fecha_entrega,
+            "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%y'),
+            "fecha_entrega": self.fecha_entrega.strftime('%d-%m-%y'),
             "estado": self.estado,
             "localidad_id": self.localidad_id,
             "jefe_proyecto_id": self.jefe_proyecto_id
@@ -243,7 +244,7 @@ class Actividades(db.Model):
         return {
             "id": self.id,
             "descripcion": self.descripcion,
-            "fecha_inicio": self.fecha_inicio,
+            "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%y'),
             "porcentaje_avance": self.porcentaje_avance,
             "observacion": self.observacion,
             "estado": self.estado,
@@ -284,7 +285,7 @@ class Horas(db.Model):
         return {
             "id": self.id,
             "descripcion": self.descripcion,
-            "fecha": self.fecha,
+            "fecha": self.fecha.strftime('%d-%m-%y'),
             "hh": self.hh,
             "hh_extra": self.hh_extra,
             "estado": self.estado,

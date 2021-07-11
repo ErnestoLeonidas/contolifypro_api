@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
-
-from models import Usuarios, Empresas, Actividades, Proyectos, db
+from flask_migrate import Migrate
+from models import db, Usuarios, Empresas, Actividades, Proyectos
 
 app = Flask(__name__)
 
@@ -8,9 +8,11 @@ app.config['DEBUG'] = True
 app.config['ENV'] = "development"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://wankucl_controlifypro:wp5Sp.4MhY{w@201.148.104.65/wankucl_controlifypro"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
 app.config['JWT_SECRET_KEY'] = "secret-key"
 
 db.init_app(app)
+Migrate(app, db)
 
 @app.route('/usuarios', methods=['POST','GET'])
 def test():
