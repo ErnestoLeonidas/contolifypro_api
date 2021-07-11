@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['ENV'] = "development"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://wankucl_controlifypro:wp5Sp.4MhY{w@201.148.104.65/wankucl_controlifypro"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://wankucl_wankucl_controlifypro2:dhdgIEC{G967@201.148.104.65/wankucl_controlifypro2"
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
 app.config['JWT_SECRET_KEY'] = "secret-key"
 
@@ -16,10 +16,10 @@ db.init_app(app)
 # CORS(app)
 Migrate(app, db)
 
-# usuarios
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
     user = Usuarios.query.all()
+    # user = Usuarios.query.filter(Usuarios.estado == 1).all()
     # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
     user = list(map(lambda x: x.serialize(), user))
     return jsonify(user),200
@@ -101,7 +101,6 @@ def addUsuario():
 
     return jsonify(user.serialize()),200
 
-# empresas
 @app.route('/empresas', methods=['GET'])
 def getEmpresas():
     empresas = Empresas.query.all()
@@ -121,7 +120,7 @@ def deleteEmpresa(id):
 
     return jsonify(empresa.serialize()),200
 
-# actividades
+
 @app.route('/actividades', methods=['GET'])
 def getActividades():
     actividades = Actividades.query.all()
@@ -190,7 +189,6 @@ def addActividad():
 
     return jsonify(actividad.serialize()),200
 
-# Proyectos
 @app.route('/proyectos', methods=['GET'])
 def getProyectos():
     proyectos = Proyectos.query.all()
