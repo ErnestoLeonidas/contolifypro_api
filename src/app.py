@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_migrate import Migrate
+from flask_cors import CORS
 from models import db, Usuarios, Empresas, Actividades, Proyectos
 
 app = Flask(__name__)
@@ -12,9 +13,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://wankucl_controlifypro:w
 app.config['JWT_SECRET_KEY'] = "secret-key"
 
 db.init_app(app)
+CORS(app)
 Migrate(app, db)
 
-@app.route('/usuarios', methods=['POST','GET'])
+@app.route('/usuarios', methods=['GET'])
 def test():
     user = Usuarios.query.all()
     # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
@@ -27,37 +29,24 @@ def test():
     # user = Usuarios.query.get(1)
     # return jsonify(user.serialize()), 200
 
-@app.route('/empresas')
+@app.route('/empresas', methods=['GET'])
 def getEmpresas():
     empresas = Empresas.query.all()
     empresas = list(map(lambda x: x.serialize(), empresas))
     return jsonify(empresas),200
 
-@app.route('/actividades')
+@app.route('/actividades', methods=['GET'])
 def getActividades():
     actividades = Actividades.query.all()
     actividades = list(map(lambda x: x.serialize(), actividades))
     return jsonify(actividades),200
 
-@app.route('/proyectos')
+@app.route('/proyectos', methods=['GET'])
 def getProyectos():
     proyectos = Proyectos.query.all()
     proyectos = list(map(lambda x: x.serialize(), proyectos))
     return jsonify(proyectos),200
 
-    # return  {
-    #     "descripcion": "Desarrollo de ingenier\u00eda de  nuevos chutes", 
-    #     "estado": 1, 
-    #     "fecha_entrega": "Fri, 01 Oct 2021 00:00:00 GMT", 
-    #     "fecha_inicio": "Sat, 01 May 2021 00:00:00 GMT", 
-    #     "id": 1, 
-    #     "jefe_proyecto_id": 1, 
-    #     "localidad_id": 1, 
-    #     "nombre": "Nuevos Chutes", 
-    #     "porcentaje_avance": 20, 
-    #     "presupuesto": 1000, 
-    #     "sigla": "QUI"
-    # }
 
 
 app.run(host='localhost', port=5000)
