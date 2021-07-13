@@ -224,7 +224,7 @@ class Proyectos(db.Model):
             "fecha_entrega": self.fecha_entrega.strftime('%d-%m-%y'),
             "estado": self.estado,
             "localidad_id": self.localidad_id,
-            "jefe_proyecto_id": self.jefe_proyecto_id
+            "jefe_proyecto": self.jefe_proyecto_id
         }
 
     def save(self):

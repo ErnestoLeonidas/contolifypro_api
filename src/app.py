@@ -19,7 +19,7 @@ Migrate(app, db)
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
     user = Usuarios.query.all()
-    # user = Usuarios.query.filter(Usuarios.estado == 1).all()
+    user = Usuarios.query.filter(Usuarios.estado == 1).all()
     # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
     user = list(map(lambda x: x.serialize(), user))
     return jsonify(user),200
@@ -101,6 +101,7 @@ def addUsuario():
 
     return jsonify(user.serialize()),200
 
+# empresas
 @app.route('/empresas', methods=['GET'])
 def getEmpresas():
     empresas = Empresas.query.all()
