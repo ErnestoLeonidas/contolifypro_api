@@ -75,6 +75,17 @@ class Empresas(db.Model):
             "comuna_id": self.comuna_id
         }
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
 class Cargos(db.Model):
     __tablename__ = 'Cargos'
     id = db.Column(db.Integer, primary_key=True)
@@ -90,6 +101,7 @@ class Cargos(db.Model):
             "estado": self.estado,
             "empresa_id": self.empresa_id
         }
+    
 
 class Roles(db.Model):
     __tablename__ = 'Roles'

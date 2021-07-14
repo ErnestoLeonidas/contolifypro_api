@@ -26,7 +26,6 @@ Migrate(app, db)
 
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
-    user = Usuarios.query.all()
     user = Usuarios.query.filter(Usuarios.estado == 1).all()
     # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
     user = list(map(lambda x: x.serialize(), user))
@@ -44,7 +43,7 @@ def deleteUsuario(id):
     Usuarios.update(user)
     return jsonify(user.serialize()),200
     
-@app.route('/usuarios/<id>', methods=['POST'])
+@app.route('/usuarios/<id>', methods=['PUT'])
 def updateUsuario(id):
     user = Usuarios.query.get(id)
 
@@ -76,9 +75,8 @@ def updateUsuario(id):
 
     return jsonify(user.serialize()),200
 
-@app.route('/usuarios', methods=['PUT'])
+@app.route('/usuarios', methods=['POST'])
 def addUsuario():
-
     user = Usuarios()
 
     rut = request.json.get('rut')
@@ -126,13 +124,48 @@ def deleteEmpresa(id):
     empresa = Empresas.query.get(id)
     empresa.estado = 0
     Empresas.update(empresa)
-
     return jsonify(empresa.serialize()),200
 
+@app.route('/empresas/<id>', methods=['PUT'])
+def updateEmpresa(id):
+    empresa = Empresa.query.get(id)
+
+    nombre = request.json.get('nombre')
+    giro = request.json.get('giro')
+    direccion = request.json.get('direccion')
+    estado = request.json.get('estado')
+    comuna_id = request.json.get('comuna_id')
+
+    empresa.nombre = nombre
+    empresa.giro = giro
+    empresa.direccion = direccion
+    empresa.estado = estado
+    empresa.comuna_id = comuna_id
+    empresa.update(actividad)
+
+    return jsonify(actividad.serialize()),200
+
+@app.route('/empresas', methods=['POST'])
+def addEmpresa():
+    empresa = Empresa.query.get(id)
+
+    nombre = request.json.get('nombre')
+    giro = request.json.get('giro')
+    direccion = request.json.get('direccion')
+    estado = request.json.get('estado')
+    comuna_id = request.json.get('comuna_id')
+
+    empresa.nombre = nombre
+    empresa.giro = giro
+    empresa.direccion = direccion
+    empresa.estado = estado
+    empresa.comuna_id = comuna_id
+    empresa.save(actividad)
+    return jsonify(actividad.serialize()),201
 
 @app.route('/actividades', methods=['GET'])
 def getActividades():
-    actividades = Actividades.query.all()
+    actividades = Actividades.query.filter(Actividades.estado == 1).all()
     actividades = list(map(lambda x: x.serialize(), actividades))
     return jsonify(actividades),200
 
@@ -149,7 +182,7 @@ def deleteActividad(id):
 
     return jsonify(actividad.serialize()),200
 
-@app.route('/actividades/<id>', methods=['POST'])
+@app.route('/actividades/<id>', methods=['PUT'])
 def updateActividad(id):
     actividad = Actividades.query.get(id)
 
@@ -173,9 +206,8 @@ def updateActividad(id):
 
     return jsonify(actividad.serialize()),200
 
-@app.route('/actividades', methods=['PUT'])
+@app.route('/actividades', methods=['POST'])
 def addActividad():
-
     actividad = Actividades()
 
     descripcion = request.json.get('descripcion')
@@ -196,7 +228,7 @@ def addActividad():
 
     Actividades.save(actividad)
 
-    return jsonify(actividad.serialize()),200
+    return jsonify(actividad.serialize()),201
 
 @app.route('/proyectos', methods=['GET'])
 def getProyectos():
@@ -204,6 +236,79 @@ def getProyectos():
     proyectos = list(map(lambda x: x.serialize(), proyectos))
     return jsonify(proyectos),200
 
+@app.route('/proyectos/<id>', methods=['GET'])
+def getProyecto(id):
+    proyecto = Proyectos.query.get(id)
+    return jsonify(proyecto.serialize()),200
+
+@app.route('/proyectos/<id>', methods=['DELETE'])
+def deleteProyecto(id):
+    proyecto = Proyectos.query.get(id)
+    proyecto.estado = 0
+    Proyectos.update(proyecto)
+    return jsonify(proyecto.serialize()),200
+
+@app.route('/proyectos/<id>', methods=['PUT'])
+def updateProyecto(id):
+    proyecto = Proyectos.query.get(id)
+
+    sigla = request.json.get('sigla')
+    nombre = request.json.get('nombre')
+    descripcion = request.json.get('descripcion')
+    porcentaje_avance = request.json.get('porcentaje_avance')
+    presupuesto = request.json.get('presupuesto')
+    fecha_inicio = request.json.get('fecha_inicio')
+    fecha_entrega = request.json.get('fecha_entrega')
+    estado = request.json.get('estado')
+    localidad_id = request.json.get('localidad_id')
+    jefe_proyecto_id = request.json.get('jefe_proyecto_id')
+
+    proyecto.sigla = sigla
+    proyecto.nombre = nombre
+    proyecto.descripcion = descripcion
+    proyecto.porcentaje_avance = porcentaje_avance
+    proyecto.presupuesto = presupuesto
+    proyecto.fecha_inicio = fecha_inicio
+    proyecto.fecha_entrega = fecha_entrega
+
+    proyecto.estado = estado
+    proyecto.localidad_id = localidad_id
+    proyecto.jefe_proyecto_id = jefe_proyecto_id
+
+    Proyectos.update(proyecto)
+
+    return jsonify(proyecto.serialize()),200
+
+@app.route('/proyectos', methods=['POST'])
+def addProyecto():
+    proyecto = Proyectos.query.get(id)
+
+    sigla = request.json.get('sigla')
+    nombre = request.json.get('nombre')
+    descripcion = request.json.get('descripcion')
+    porcentaje_avance = request.json.get('porcentaje_avance')
+    presupuesto = request.json.get('presupuesto')
+    fecha_inicio = request.json.get('fecha_inicio')
+    fecha_entrega = request.json.get('fecha_entrega')
+    estado = request.json.get('estado')
+    localidad_id = request.json.get('localidad_id')
+    jefe_proyecto_id = request.json.get('jefe_proyecto_id')
+
+    proyecto.sigla = sigla
+    proyecto.nombre = nombre
+    proyecto.descripcion = descripcion
+    proyecto.porcentaje_avance = porcentaje_avance
+    proyecto.presupuesto = presupuesto
+    proyecto.fecha_inicio = fecha_inicio
+    proyecto.fecha_entrega = fecha_entrega
+
+    proyecto.estado = estado
+    proyecto.localidad_id = localidad_id
+    proyecto.jefe_proyecto_id = jefe_proyecto_id
+
+    Proyectos.save(proyecto)
+
+    return jsonify(proyecto.serialize()),201
 
 
  
