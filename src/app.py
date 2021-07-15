@@ -128,7 +128,7 @@ def addUsuario():
 # empresas
 @app.route('/empresas', methods=['GET'])
 def getEmpresas():
-    empresas = Empresas.query.all()
+    empresas = Empresas.query.filter(Empresas.estado == 1).all()
     empresas = list(map(lambda x: x.serialize(), empresas))
     return jsonify(empresas),200
 
@@ -251,7 +251,7 @@ def addActividad():
 
 @app.route('/proyectos', methods=['GET'])
 def getProyectos():
-    proyectos = Proyectos.query.all()
+    proyectos = Proyectos.query.filter(Proyectos.estado == 1).all()
     proyectos = list(map(lambda x: x.serialize(), proyectos))
     return jsonify(proyectos),200
 
