@@ -165,7 +165,7 @@ def updateEmpresa(id):
 
 @app.route('/empresas', methods=['POST'])
 def addEmpresa():
-    empresa = Empresa.query.get(id)
+    empresa = Empresa()
 
     nombre = request.json.get('nombre')
     giro = request.json.get('giro')
@@ -182,7 +182,7 @@ def addEmpresa():
     return jsonify(actividad.serialize()),201
 
 @app.route('/actividades', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def getActividades():
     actividades = Actividades.query.filter(Actividades.estado == 1).all()
     actividades = list(map(lambda x: x.serialize(), actividades))
@@ -300,7 +300,7 @@ def updateProyecto(id):
 
 @app.route('/proyectos', methods=['POST'])
 def addProyecto():
-    proyecto = Proyectos.query.get(id)
+    proyecto = Proyectos()
 
     sigla = request.json.get('sigla')
     nombre = request.json.get('nombre')
