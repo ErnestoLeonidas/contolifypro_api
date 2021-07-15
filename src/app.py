@@ -24,6 +24,24 @@ db.init_app(app)
 # CORS(app)
 Migrate(app, db)
 
+app.config["JWT_SECRET_KEY"] = "os.environ.get('super-secret')"  # No estoy creando una funcion para super-secret!
+jwt = JWTManager(app)
+
+# Create a route to authenticate your users and return JWTs. The
+# create_access_token() function is used to actually generate the JWT.
+@app.route("/login", methods=["POST"])
+def create_token():
+    email = request.json.get("email")
+    password = request.json.get("password")
+
+    user = Usuarios.query.filter(Usuarios.email == email, Usuarios.password == password).first()
+
+    if user == None:
+        return jsonify({"msg": "Bad email or password"}), 401
+
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token, usuario_id=user.id, rol=user.rol_id)
+
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
     user = Usuarios.query.filter(Usuarios.estado == 1).all()
@@ -164,6 +182,7 @@ def addEmpresa():
     return jsonify(actividad.serialize()),201
 
 @app.route('/actividades', methods=['GET'])
+@jwt_required()
 def getActividades():
     actividades = Actividades.query.filter(Actividades.estado == 1).all()
     actividades = list(map(lambda x: x.serialize(), actividades))
@@ -313,20 +332,6 @@ def addProyecto():
 
  
 
-app.config["JWT_SECRET_KEY"] = "os.environ.get('super-secret')"  # No estoy creando una funcion para super-secret!
-jwt = JWTManager(app)
-
-# Create a route to authenticate your users and return JWTs. The
-# create_access_token() function is used to actually generate the JWT.
-@app.route("/token", methods=["POST"])
-def create_token():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
-    if email != "test" or password != "test":
-        return jsonify({"msg": "Bad email or password"}), 401
-
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
 
 
 app.run(host='localhost', port=5000)
