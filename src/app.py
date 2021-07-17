@@ -2,14 +2,12 @@ import os
 from flask import Flask, request, jsonify, render_template
 from flask_migrate import Migrate
 from flask_cors import CORS
-from models import db, Usuarios, Empresas, Actividades, Proyectos
-
+from models import db, Usuarios, Empresas, Actividades, Proyectos, Localidades
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
-
 
 app = Flask(__name__)
 
@@ -24,11 +22,9 @@ db.init_app(app)
 # CORS(app)
 Migrate(app, db)
 
-app.config["JWT_SECRET_KEY"] = "os.environ.get('super-secret')"  # No estoy creando una funcion para super-secret!
+app.config["JWT_SECRET_KEY"] = "os.environ.get('super-secret')"
 jwt = JWTManager(app)
 
-# Create a route to authenticate your users and return JWTs. The
-# create_access_token() function is used to actually generate the JWT.
 @app.route("/login", methods=["POST"])
 def create_token():
     email = request.json.get("email")
@@ -36,11 +32,18 @@ def create_token():
 
     user = Usuarios.query.filter(Usuarios.email == email, Usuarios.password == password).first()
 
+    if user.estado == 0:
+        return jsonify({ 
+            "estado": "desactivado",
+            "msg": "Su usuario se encuentra desactivado, favor contactese con su administrador o jefe de proyecto"}), 204
+
     if user == None:
-        return jsonify({"msg": "Bad email or password"}), 401
+        return jsonify({ 
+            "estado": "error",
+            "msg": "Error en email o password"}), 401
 
     access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token, usuario_id=user.id, rol=user.rol_id)
+    return jsonify(access_token=access_token, usuario_id=user.id, rol_id=user.rol_id),200
 
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
@@ -329,10 +332,33 @@ def addProyecto():
 
     return jsonify(proyecto.serialize()),201
 
+@app.route('/proyectos/buscar', methods=['POST'])
+def srcProyectos():
+    consulta = request.json
 
- 
+    # print(consulta)
 
+    # if request.json.get('sigla') == None:
+    #     return "sin sigla"
+    
+    # if request.json.get('estado') == 1:
+    #     proyectos = proyectos.query.filter(proyectos.estado == 1).all()
+    # else:
+    #     proyectos = proyectos.query.filter(proyectos.estado == 0).all()
 
+    proyectos = Proyectos.query.filter_by(**consulta).all()
+
+    if len(proyectos) == 0:
+        return jsonify({ "msg": "No se encuentran proyectos según criterio"}), 401
+
+    proyectos = list(map(lambda x: x.serialize(), proyectos))
+    return jsonify(proyectos),200
+
+@app.route('/localidades', methods=['GET'])
+def getLocalidades():
+    localidades = Localidades.query.filter(Localidades.estado == 1).all()
+    localidades = list(map(lambda x: x.serialize(), localidades))
+    return jsonify(localidades),200
 
 app.run(host='localhost', port=5000)
 

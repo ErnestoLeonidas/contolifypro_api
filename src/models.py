@@ -232,8 +232,8 @@ class Proyectos(db.Model):
             "descripcion": self.descripcion,
             "porcentaje_avance": self.porcentaje_avance,
             "presupuesto": self.presupuesto,
-            "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%y'),
-            "fecha_entrega": self.fecha_entrega.strftime('%d-%m-%y'),
+            "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%Y'),
+            "fecha_entrega": self.fecha_entrega.strftime('%d-%m-%Y'),
             "estado": self.estado,
             "localidad_id": self.localidad_id,
             "jefe_proyecto_id": self.jefe_proyecto_id
