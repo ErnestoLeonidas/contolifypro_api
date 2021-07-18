@@ -25,6 +25,9 @@ Migrate(app, db)
 app.config["JWT_SECRET_KEY"] = "os.environ.get('super-secret')"
 jwt = JWTManager(app)
 
+
+############# Login ###############
+
 @app.route("/login", methods=["POST"])
 def create_token():
     email = request.json.get("email")
@@ -44,6 +47,10 @@ def create_token():
 
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token, usuario_id=user.id, rol_id=user.rol_id),200
+
+
+
+############# Usuarios ###############
 
 @app.route('/usuarios', methods=['GET'])
 def getUsuarios():
@@ -127,8 +134,11 @@ def addUsuario():
     Usuarios.save(user)
 
     return jsonify(user.serialize()),200
+    
 
-# empresas
+
+############# Empresas ###############
+
 @app.route('/empresas', methods=['GET'])
 def getEmpresas():
     empresas = Empresas.query.filter(Empresas.estado == 1).all()
@@ -183,6 +193,10 @@ def addEmpresa():
     empresa.comuna_id = comuna_id
     empresa.save(actividad)
     return jsonify(actividad.serialize()),201
+
+
+
+############# Actividades ###############
 
 @app.route('/actividades', methods=['GET'])
 # @jwt_required()
@@ -251,6 +265,10 @@ def addActividad():
     Actividades.save(actividad)
 
     return jsonify(actividad.serialize()),201
+
+
+
+############# Proyectos ###############
 
 @app.route('/proyectos', methods=['GET'])
 def getProyectos():
@@ -353,6 +371,15 @@ def srcProyectos():
 
     proyectos = list(map(lambda x: x.serialize(), proyectos))
     return jsonify(proyectos),200
+
+@app.route('/usuarios/jefe_proyectos', methods=['GET'])
+def getJefeProyectos():
+    user = Usuarios.query.filter(Usuarios.rol_id == 2).all()
+    # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
+    user = list(map(lambda x: x.serialize(), user))
+    return jsonify(user),200
+
+############# Localidades ###############
 
 @app.route('/localidades', methods=['GET'])
 def getLocalidades():
