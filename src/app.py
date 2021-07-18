@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify, render_template
 from flask_migrate import Migrate
 from flask_cors import CORS
-from models import db, Usuarios, Empresas, Actividades, Proyectos, Localidades
+from models import db, Usuarios, Empresas, Actividades, Proyectos, Localidades, Horas
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -386,6 +386,17 @@ def getLocalidades():
     localidades = Localidades.query.filter(Localidades.estado == 1).all()
     localidades = list(map(lambda x: x.serialize(), localidades))
     return jsonify(localidades),200
+
+
+############# Horas ###############
+
+@app.route('/horas', methods=['GET'])
+def getHoras():
+    horas = Horas.query.filter(Horas.estado == 1).all()
+    horas = list(map(lambda x: x.serialize(), horas))
+    return jsonify(horas),200
+
+
 
 app.run(host='localhost', port=5000)
 
