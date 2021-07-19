@@ -9,6 +9,9 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
+from datetime import datetime
+import time
+
 app = Flask(__name__)
 
 app.config['DEBUG'] = True
@@ -308,8 +311,10 @@ def updateProyecto(id):
     proyecto.descripcion = descripcion
     proyecto.porcentaje_avance = porcentaje_avance
     proyecto.presupuesto = presupuesto
-    proyecto.fecha_inicio = fecha_inicio
-    proyecto.fecha_entrega = fecha_entrega
+
+    # la fecha viene como string, acá se transforma a date
+    proyecto.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
+    proyecto.fecha_entrega = datetime.strptime(fecha_entrega, '%d-%m-%Y').date()
 
     proyecto.estado = estado
     proyecto.localidad_id = localidad_id
