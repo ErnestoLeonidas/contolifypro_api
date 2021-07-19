@@ -269,7 +269,11 @@ def addActividad():
 
     return jsonify(actividad.serialize()),201
 
-
+@app.route('/actividades/<id>/proyectos', methods=['GET'])
+def srcActividadesSegunProyecto(id):
+    actividades = Actividades.query.filter(Actividades.proyecto_id == id).all()
+    actividades = list(map(lambda x: x.serialize(), actividades))
+    return jsonify(actividades),200
 
 ############# Proyectos ###############
 
