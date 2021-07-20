@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify, render_template
 from flask_migrate import Migrate
 from flask_cors import CORS
-from models import db, Usuarios, Empresas, Actividades, Proyectos, Localidades, Horas
+from models import db, Usuarios, Actividades, Proyectos, Localidades, Horas
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -138,66 +138,6 @@ def addUsuario():
 
     return jsonify(user.serialize()),200
     
-
-
-############# Empresas ###############
-
-@app.route('/empresas', methods=['GET'])
-def getEmpresas():
-    empresas = Empresas.query.filter(Empresas.estado == 1).all()
-    empresas = list(map(lambda x: x.serialize(), empresas))
-    return jsonify(empresas),200
-
-@app.route('/empresas/<id>', methods=['GET'])
-def getEmpresa(id):
-    empresa = Empresas.query.get(id)
-    return jsonify(empresa.serialize()),200
-
-@app.route('/empresas/<id>', methods=['DELETE'])
-def deleteEmpresa(id):
-    empresa = Empresas.query.get(id)
-    empresa.estado = 0
-    Empresas.update(empresa)
-    return jsonify(empresa.serialize()),200
-
-@app.route('/empresas/<id>', methods=['PUT'])
-def updateEmpresa(id):
-    empresa = Empresa.query.get(id)
-
-    nombre = request.json.get('nombre')
-    giro = request.json.get('giro')
-    direccion = request.json.get('direccion')
-    estado = request.json.get('estado')
-    comuna_id = request.json.get('comuna_id')
-
-    empresa.nombre = nombre
-    empresa.giro = giro
-    empresa.direccion = direccion
-    empresa.estado = estado
-    empresa.comuna_id = comuna_id
-    empresa.update(actividad)
-
-    return jsonify(actividad.serialize()),200
-
-@app.route('/empresas', methods=['POST'])
-def addEmpresa():
-    empresa = Empresa()
-
-    nombre = request.json.get('nombre')
-    giro = request.json.get('giro')
-    direccion = request.json.get('direccion')
-    estado = request.json.get('estado')
-    comuna_id = request.json.get('comuna_id')
-
-    empresa.nombre = nombre
-    empresa.giro = giro
-    empresa.direccion = direccion
-    empresa.estado = estado
-    empresa.comuna_id = comuna_id
-    empresa.save(actividad)
-    return jsonify(actividad.serialize()),201
-
-
 
 ############# Actividades ###############
 
@@ -406,6 +346,71 @@ def getHoras():
     horas = Horas.query.filter(Horas.estado == 1).all()
     horas = list(map(lambda x: x.serialize(), horas))
     return jsonify(horas),200
+
+@app.route('/horas/<id>', methods=['GET'])
+def getHora(id):
+    horas = Horas.query.get(id)
+    return jsonify(horas.serialize()),200
+
+@app.route('/horas/<id>', methods=['DELETE'])
+def deleteHora(id):
+    horas = Horas.query.get(id)
+    horas.estado = 0
+    Horas.update(horas)
+    return jsonify(horas.serialize()),200
+
+@app.route('/horas/<id>', methods=['PUT'])
+def updateHora(id):
+    horas = Horas.query.get(id)
+
+    descripcion = request.json.get('descripcion')
+    fecha = request.json.get('fecha')
+    hh = request.json.get('hh')
+    hh_extra = request.json.get('hh_extra')
+    estado = request.json.get('estado')
+    actividad_id = request.json.get('actividad_id')
+    usuario_id = request.json.get('usuario_id')
+    proyecto_id = request.json.get('proyecto_id')
+
+    horas.descripcion = descripcion
+    horas.fecha = datetime.strptime(fecha, '%d-%m-%Y').date()
+    horas.hh = hh
+    horas.hh_extra = hh_extra
+    horas.estado = estado
+    horas.actividad_id = actividad_id
+    horas.usuario_id = usuario_id
+    horas.proyecto_id = proyecto_id
+
+    Horas.update(horas)
+
+    return jsonify(horas.serialize()),200
+
+@app.route('/horas', methods=['POST'])
+def addHora():
+    horas = Horas.query.get(id)
+
+    descripcion = request.json.get('descripcion')
+    fecha = request.json.get('fecha')
+    hh = request.json.get('hh')
+    hh_extra = request.json.get('hh_extra')
+    estado = request.json.get('estado')
+    actividad_id = request.json.get('actividad_id')
+    usuario_id = request.json.get('usuario_id')
+    proyecto_id = request.json.get('proyecto_id')
+
+    horas.descripcion = descripcion
+    horas.fecha = datetime.strptime(fecha, '%d-%m-%Y').date()
+    horas.hh = hh
+    horas.hh_extra = hh_extra
+    horas.estado = estado
+    horas.actividad_id = actividad_id
+    horas.usuario_id = usuario_id
+    horas.proyecto_id = proyecto_id
+
+    Horas.save(horas)
+
+    return jsonify(horas.serialize()),201
+
 
 
 
