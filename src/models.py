@@ -203,7 +203,7 @@ class Actividades(db.Model):
     descripcion = db.Column(db.String(255), nullable=False)
     fecha_inicio = db.Column(db.DateTime, nullable=False)
     porcentaje_avance = db.Column(db.Integer, nullable=True)
-    observacion = db.Column(db.String(2000), nullable=True)
+    presupuesto = db.Column(db.Integer, nullable=True)
     estado = db.Column(db.Integer, nullable=False)
 
     proyecto_id = db.Column(db.Integer, db.ForeignKey('Proyectos.id'), nullable=False)
@@ -218,7 +218,7 @@ class Actividades(db.Model):
             "descripcion": self.descripcion,
             "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%y'),
             "porcentaje_avance": self.porcentaje_avance,
-            "observacion": self.observacion,
+            "presupuesto": self.presupuesto,
             "estado": self.estado,
             "proyecto_id": self.proyecto_id,
             "usuario_id": self.usuario_id

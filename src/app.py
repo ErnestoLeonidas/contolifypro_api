@@ -17,7 +17,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['ENV'] = "development"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://wankucl_wankucl_controlifypro2:dhdgIEC{G967@201.148.104.65/wankucl_controlifypro2"
+app.config['SQLALCHEMY_DATABASE_URI'] = ""
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
 app.config['JWT_SECRET_KEY'] = "secret-key"
 
@@ -165,7 +165,7 @@ def updateActividad(id):
     descripcion = request.json.get('descripcion')
     fecha_inicio = request.json.get('fecha_inicio')
     porcentaje_avance = request.json.get('porcentaje_avance')
-    observacion = request.json.get('observacion')
+    presupuesto = request.json.get('presupuesto')
     estado = request.json.get('estado')
     proyecto_id = request.json.get('proyecto_id')
     usuario_id = request.json.get('usuario_id')
@@ -173,7 +173,7 @@ def updateActividad(id):
     actividad.descripcion = descripcion
     actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
     actividad.porcentaje_avance = porcentaje_avance
-    actividad.observacion = observacion
+    actividad.presupuesto = presupuesto
     actividad.estado = estado
     actividad.proyecto_id = proyecto_id
     actividad.usuario_id = usuario_id
@@ -189,7 +189,7 @@ def addActividad():
     descripcion = request.json.get('descripcion')
     fecha_inicio = request.json.get('fecha_inicio')
     porcentaje_avance = request.json.get('porcentaje_avance')
-    observacion = request.json.get('observacion')
+    presupuesto = request.json.get('presupuesto')
     estado = request.json.get('estado')
     proyecto_id = request.json.get('proyecto_id')
     usuario_id = request.json.get('usuario_id')
@@ -197,7 +197,7 @@ def addActividad():
     actividad.descripcion = descripcion
     actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
     actividad.porcentaje_avance = porcentaje_avance
-    actividad.observacion = observacion
+    actividad.presupuesto = presupuesto
     actividad.estado = estado
     actividad.proyecto_id = proyecto_id
     actividad.usuario_id = usuario_id
@@ -297,7 +297,7 @@ def addProyecto():
     proyecto.descripcion = descripcion
     proyecto.porcentaje_avance = porcentaje_avance
     proyecto.presupuesto = presupuesto
-    
+
     proyecto.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
     proyecto.fecha_entrega = datetime.strptime(fecha_entrega, '%d-%m-%Y').date()
 
