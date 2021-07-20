@@ -78,7 +78,6 @@ def deleteUsuario(id):
 def updateUsuario(id):
     user = Usuarios.query.get(id)
 
-    rut = request.json.get('rut')
     primer_nombre = request.json.get('primer_nombre')
     segundo_nombre = request.json.get('segundo_nombre')
     apellido_paterno = request.json.get('apellido_paterno')
@@ -90,7 +89,6 @@ def updateUsuario(id):
     comuna_id = request.json.get('comuna_id')
     rol_id = request.json.get('rol_id')
 
-    user.rut = rut
     user.primer_nombre = primer_nombre
     user.segundo_nombre = segundo_nombre
     user.apellido_paterno = apellido_paterno
@@ -110,7 +108,6 @@ def updateUsuario(id):
 def addUsuario():
     user = Usuarios()
 
-    rut = request.json.get('rut')
     primer_nombre = request.json.get('primer_nombre')
     segundo_nombre = request.json.get('segundo_nombre')
     apellido_paterno = request.json.get('apellido_paterno')
@@ -174,7 +171,7 @@ def updateActividad(id):
     usuario_id = request.json.get('usuario_id')
 
     actividad.descripcion = descripcion
-    actividad.fecha_inicio = fecha_inicio
+    actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
     actividad.porcentaje_avance = porcentaje_avance
     actividad.observacion = observacion
     actividad.estado = estado
@@ -198,7 +195,7 @@ def addActividad():
     usuario_id = request.json.get('usuario_id')
 
     actividad.descripcion = descripcion
-    actividad.fecha_inicio = fecha_inicio
+    actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
     actividad.porcentaje_avance = porcentaje_avance
     actividad.observacion = observacion
     actividad.estado = estado
@@ -300,8 +297,9 @@ def addProyecto():
     proyecto.descripcion = descripcion
     proyecto.porcentaje_avance = porcentaje_avance
     proyecto.presupuesto = presupuesto
-    proyecto.fecha_inicio = fecha_inicio
-    proyecto.fecha_entrega = fecha_entrega
+    
+    proyecto.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
+    proyecto.fecha_entrega = datetime.strptime(fecha_entrega, '%d-%m-%Y').date()
 
     proyecto.estado = estado
     proyecto.localidad_id = localidad_id
