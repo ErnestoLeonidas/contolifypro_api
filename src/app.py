@@ -275,6 +275,18 @@ def srcActividadesSegunProyecto(id):
     actividades = list(map(lambda x: x.serialize(), actividades))
     return jsonify(actividades),200
 
+@app.route('/actividades/buscar', methods=['POST'])
+def srcActividades():
+    consulta = request.json
+    
+    actividades = Actividades.query.filter_by(**consulta).all()
+
+    if len(actividades) == 0:
+        return jsonify({ "msg": "No se encuentran actividades según criterio de búsqueda"}), 401
+
+    actividades = list(map(lambda x: x.serialize(), actividades))
+    return jsonify(actividades),200
+
 ############# Proyectos ###############
 
 @app.route('/proyectos', methods=['GET'])
@@ -362,16 +374,6 @@ def addProyecto():
 @app.route('/proyectos/buscar', methods=['POST'])
 def srcProyectos():
     consulta = request.json
-
-    # print(consulta)
-
-    # if request.json.get('sigla') == None:
-    #     return "sin sigla"
-    
-    # if request.json.get('estado') == 1:
-    #     proyectos = proyectos.query.filter(proyectos.estado == 1).all()
-    # else:
-    #     proyectos = proyectos.query.filter(proyectos.estado == 0).all()
 
     proyectos = Proyectos.query.filter_by(**consulta).all()
 
