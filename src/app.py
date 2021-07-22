@@ -186,7 +186,8 @@ def updateActividad(id):
     usuario_id = request.json.get('usuario_id')
 
     actividad.descripcion = descripcion
-    actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
+    # actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+    actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
     actividad.porcentaje_avance = porcentaje_avance
     actividad.presupuesto = presupuesto
     actividad.estado = estado
@@ -281,8 +282,8 @@ def updateProyecto(id):
     proyecto.presupuesto = presupuesto
 
     # la fecha viene como string, acá se transforma a date
-    proyecto.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
-    proyecto.fecha_entrega = datetime.strptime(fecha_entrega, '%d-%m-%Y').date()
+    proyecto.fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+    proyecto.fecha_entrega = datetime.strptime(fecha_entrega, '%Y-%m-%d').date()
 
     proyecto.estado = estado
     proyecto.localidad_id = localidad_id
@@ -386,7 +387,7 @@ def updateHora(id):
     proyecto_id = request.json.get('proyecto_id')
 
     horas.descripcion = descripcion
-    horas.fecha = datetime.strptime(fecha, '%d-%m-%Y').date()
+    horas.fecha = datetime.strptime(fecha, '%Y-%m-%d').date()
     horas.hh = hh
     horas.hh_extra = hh_extra
     horas.estado = estado

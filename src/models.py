@@ -179,8 +179,8 @@ class Proyectos(db.Model):
             "descripcion": self.descripcion,
             "porcentaje_avance": self.porcentaje_avance,
             "presupuesto": self.presupuesto,
-            "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%Y'),
-            "fecha_entrega": self.fecha_entrega.strftime('%d-%m-%Y'),
+            "fecha_inicio": self.fecha_inicio.strftime('%Y-%m-%d'),
+            "fecha_entrega": self.fecha_entrega.strftime('%Y-%m-%d'),
             "estado": self.estado,
             "localidad_id": self.localidad_id,
             "jefe_proyecto_id": self.jefe_proyecto_id
@@ -216,7 +216,7 @@ class Actividades(db.Model):
         return {
             "id": self.id,
             "descripcion": self.descripcion,
-            "fecha_inicio": self.fecha_inicio.strftime('%d-%m-%y'),
+            "fecha_inicio": self.fecha_inicio.strftime('%Y-%m-%d'),
             "porcentaje_avance": self.porcentaje_avance,
             "presupuesto": self.presupuesto,
             "estado": self.estado,
@@ -257,7 +257,7 @@ class Horas(db.Model):
         return {
             "id": self.id,
             "descripcion": self.descripcion,
-            "fecha": self.fecha.strftime('%d-%m-%y'),
+            "fecha": self.fecha.strftime('%Y-%m-%d'),
             "hh": self.hh,
             "hh_extra": self.hh_extra,
             "estado": self.estado,
