@@ -242,7 +242,7 @@ class Horas(db.Model):
     fecha = db.Column(db.DateTime, nullable=False)
     hh = db.Column(db.Float, nullable=False)
     hh_extra = db.Column(db.Float, nullable=True)
-    estado = db.Column(db.Integer, nullable=False)
+    estado = db.Column(db.Integer, nullable=True)
 
     actividad_id = db.Column(db.Integer, db.ForeignKey('Actividades.id'), nullable=False)
     actividad = db.relationship('Actividades', backref=db.backref('Horas', lazy=True))

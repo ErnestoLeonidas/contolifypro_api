@@ -9,6 +9,13 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
+# flask_mysqldb
+from flask_mysqldb import MySQL
+#  pandas
+import pandas as pd
+from pandas.io import sql
+
+
 from datetime import datetime
 import time
 
@@ -17,9 +24,18 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['ENV'] = "development"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = ""
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://controlify:dhdgIEC{G967@controlify2.ca9hiqnjeavi.sa-east-1.rds.amazonaws.com/controlify2"
 # app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///database.db"
 app.config['JWT_SECRET_KEY'] = "secret-key"
+
+
+# flask_mysqldb
+app.config['MYSQL_HOST'] = "controlify2.ca9hiqnjeavi.sa-east-1.rds.amazonaws.com"
+app.config['MYSQL_USER'] = 'controlify'
+app.config['MYSQL_PASSWORD'] = 'dhdgIEC{G967'
+app.config['MYSQL_DB'] = 'controlify2'
+mysql = MySQL(app)
+
 
 db.init_app(app)
 # CORS(app)
@@ -27,7 +43,6 @@ Migrate(app, db)
 
 app.config["JWT_SECRET_KEY"] = "os.environ.get('super-secret')"
 jwt = JWTManager(app)
-
 
 ############# Login ###############
 
@@ -126,7 +141,7 @@ def addUsuario():
     user.apellido_materno = apellido_materno
     user.password = password
     user.email = email
-    user.estado = estado
+    user.estado = 1
     user.avatar = avatar
     user.comuna_id = comuna_id
     user.rol_id = rol_id
@@ -195,10 +210,10 @@ def addActividad():
     usuario_id = request.json.get('usuario_id')
 
     actividad.descripcion = descripcion
-    actividad.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
+    actividad.fecha_inicio = fecha_inicio
     actividad.porcentaje_avance = porcentaje_avance
     actividad.presupuesto = presupuesto
-    actividad.estado = estado
+    actividad.estado = 1
     actividad.proyecto_id = proyecto_id
     actividad.usuario_id = usuario_id
 
@@ -298,10 +313,10 @@ def addProyecto():
     proyecto.porcentaje_avance = porcentaje_avance
     proyecto.presupuesto = presupuesto
 
-    proyecto.fecha_inicio = datetime.strptime(fecha_inicio, '%d-%m-%Y').date()
-    proyecto.fecha_entrega = datetime.strptime(fecha_entrega, '%d-%m-%Y').date()
+    proyecto.fecha_inicio = fecha_inicio
+    proyecto.fecha_entrega = fecha_entrega
 
-    proyecto.estado = estado
+    proyecto.estado = 1
     proyecto.localidad_id = localidad_id
     proyecto.jefe_proyecto_id = jefe_proyecto_id
 
@@ -385,7 +400,7 @@ def updateHora(id):
 
 @app.route('/horas', methods=['POST'])
 def addHora():
-    horas = Horas.query.get(id)
+    horas = Horas()
 
     descripcion = request.json.get('descripcion')
     fecha = request.json.get('fecha')
@@ -397,10 +412,10 @@ def addHora():
     proyecto_id = request.json.get('proyecto_id')
 
     horas.descripcion = descripcion
-    horas.fecha = datetime.strptime(fecha, '%d-%m-%Y').date()
+    horas.fecha = fecha
     horas.hh = hh
     horas.hh_extra = hh_extra
-    horas.estado = estado
+    horas.estado = 1
     horas.actividad_id = actividad_id
     horas.usuario_id = usuario_id
     horas.proyecto_id = proyecto_id
@@ -410,6 +425,24 @@ def addHora():
     return jsonify(horas.serialize()),201
 
 
+############# flask_mysqldb ###############
+@app.route('/test', methods=['GET'])
+def get_test():
+    # cur = mysql.connection.cursor()
+    # cur.execute('SELECT id AS id, primer_nombre FROM Usuarios')
+    # data = cur.fetchall()
+    # print(data)
+    data = pd.read_sql('SELECT id, primer_nombre FROM Usuarios;',mysql.connection)
+    my_json = data.to_json(orient='records')
+    
+    return my_json
+
+@app.route('/HorasPorActividad', methods=['GET'])
+def get_HorasPorProyecto():
+    data = pd.read_sql('SELECT sum(h.hh) AS hh, a.id AS actividad_id, a.descripcion AS descripcion FROM Horas h JOIN Actividades a ON a.id = h.actividad_id WHERE h.usuario_id = 1 AND h.estado = 1 GROUP BY a.id;',mysql.connection)
+    my_json = data.to_json(orient='records')
+    
+    return my_json
 
 
 app.run(host='localhost', port=5000)

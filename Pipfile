@@ -10,6 +10,9 @@ flask-cors = "*"
 flask-sqlalchemy = "*"
 flask-jwt-extended = "*"
 pymysql = "*"
+flask-mysqldb = "*"
+pandas = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 
