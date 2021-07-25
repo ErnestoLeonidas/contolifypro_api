@@ -70,18 +70,22 @@ def create_token():
 
 ############# Usuarios ###############
 
+#  obtener todos los usuarios
 @app.route('/usuarios', methods=['GET'])
+# @jwt_required()
 def getUsuarios():
     user = Usuarios.query.filter(Usuarios.estado == 1).all()
     # user = Usuarios.query.with_entities(Usuarios.primer_nombre).all()
     user = list(map(lambda x: x.serialize(), user))
     return jsonify(user),200
 
+# obtener usuario segun id
 @app.route('/usuarios/<id>', methods=['GET'])
 def getUsuario(id):
     user = Usuarios.query.get(id)
     return jsonify(user.serialize()),200
 
+# borrar usuario segun id
 @app.route('/usuarios/<id>', methods=['DELETE'])
 def deleteUsuario(id):
     user = Usuarios.query.get(id)
@@ -89,6 +93,7 @@ def deleteUsuario(id):
     Usuarios.update(user)
     return jsonify(user.serialize()),200
     
+# editar usuario segun id
 @app.route('/usuarios/<id>', methods=['PUT'])
 def updateUsuario(id):
     user = Usuarios.query.get(id)
@@ -119,6 +124,7 @@ def updateUsuario(id):
 
     return jsonify(user.serialize()),200
 
+# agregar usuario
 @app.route('/usuarios', methods=['POST'])
 def addUsuario():
     user = Usuarios()
@@ -439,13 +445,18 @@ def get_test():
     return my_json
 
 @app.route('/HorasPorActividad', methods=['GET'])
-def get_HorasPorProyecto():
+def get_HorasPorActividad():
     data = pd.read_sql('SELECT sum(h.hh) AS hh, a.id AS actividad_id, a.descripcion AS descripcion FROM Horas h JOIN Actividades a ON a.id = h.actividad_id WHERE h.usuario_id = 1 AND h.estado = 1 GROUP BY a.id;',mysql.connection)
     my_json = data.to_json(orient='records')
     
     return my_json
 
-
+@app.route('/HorasPorProyecto', methods=['GET'])
+def get_HorasPorProyecto():
+    data = pd.read_sql('SELECT SUM(h.hh) AS hh, p.nombre AS nombre_proyecto FROM Horas h JOIN Proyectos p ON p.id = h.proyecto_id GROUP BY p.nombre;',mysql.connection)
+    my_json = data.to_json(orient='records')
+    
+    return my_json
 
 
 app.run(host='localhost', port=5000)
