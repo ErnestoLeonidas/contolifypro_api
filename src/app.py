@@ -446,7 +446,7 @@ def get_test():
 
 @app.route('/HorasPorActividad', methods=['GET'])
 def get_HorasPorActividad():
-    data = pd.read_sql('SELECT sum(h.hh) AS hh, a.id AS actividad_id, a.descripcion AS descripcion FROM Horas h JOIN Actividades a ON a.id = h.actividad_id WHERE h.usuario_id = 1 AND h.estado = 1 GROUP BY a.id;',mysql.connection)
+    data = pd.read_sql('SELECT sum(h.hh) AS hh, a.id AS actividad_id, a.descripcion AS descripcion, p.nombre AS nombre_proyecto FROM Horas h JOIN Actividades a ON a.id = h.actividad_id JOIN Proyectos p ON p.id = h.proyecto_id WHERE h.estado = 1 GROUP BY a.id;',mysql.connection)
     my_json = data.to_json(orient='records')
     
     return my_json
@@ -454,6 +454,13 @@ def get_HorasPorActividad():
 @app.route('/HorasPorProyecto', methods=['GET'])
 def get_HorasPorProyecto():
     data = pd.read_sql('SELECT SUM(h.hh) AS hh, p.nombre AS nombre_proyecto FROM Horas h JOIN Proyectos p ON p.id = h.proyecto_id GROUP BY p.nombre;',mysql.connection)
+    my_json = data.to_json(orient='records')
+    
+    return my_json
+
+@app.route('/HorasActividadSegunProyecto/<id>', methods=['GET'])
+def get_HH_Actividad_Proyecto(id):
+    data = pd.read_sql('SELECT sum(h.hh) AS hh, a.id AS actividad_id, a.descripcion AS descripcion, p.nombre AS nombre_proyecto FROM Horas h JOIN Actividades a ON a.id = h.actividad_id JOIN Proyectos p ON p.id = h.proyecto_id WHERE p.id = '+id+' AND h.estado = 1 GROUP BY a.id;',mysql.connection)
     my_json = data.to_json(orient='records')
     
     return my_json
