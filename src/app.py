@@ -465,6 +465,13 @@ def get_HH_Actividad_Proyecto(id):
     
     return my_json
 
+@app.route('/HorasUsuarioSegunProyecto/<proyecto_id>/<usuario_id>', methods=['GET'])
+def get_HH_Usuario_Proyecto(proyecto_id=None,usuario_id=None):
+    data = pd.read_sql('SELECT sum(h.hh) AS hh, CONCAT(u.primer_nombre," ", u.apellido_paterno) AS nombre, p.nombre AS nombre_proyecto, a.descripcion AS actividad FROM Horas h JOIN Usuarios u ON u.id = h.usuario_id JOIN Proyectos p ON p.id = h.proyecto_id JOIN Actividades a ON a.id = h.actividad_id WHERE h.proyecto_id = '+proyecto_id+' AND h.usuario_id = '+usuario_id+' GROUP BY h.usuario_id, a.descripcion;',mysql.connection)
+    my_json = data.to_json(orient='records')
+    
+    return my_json
+
 
 app.run(host='localhost', port=5000)
 
